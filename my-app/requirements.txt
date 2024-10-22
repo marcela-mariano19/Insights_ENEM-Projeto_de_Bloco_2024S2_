@@ -1,0 +1,9 @@
+pandas
+streamlit
+matplotlib
+seaborn
+<<<<<<< HEAD
+fastparquet
+=======
+fastparquet
+>>>>>>> 88b34fe9de305a3ed13fe51d8e53b3f881e2c21d
