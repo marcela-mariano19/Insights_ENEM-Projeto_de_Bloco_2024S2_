@@ -1,6 +1,8 @@
 pandas
+requests
 streamlit
 matplotlib
 seaborn
+fastparquet
 beautifulsoup4
 cssselect
