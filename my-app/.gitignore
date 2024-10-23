@@ -160,7 +160,8 @@ cython_debug/
 #.idea/
 
 #Ignorar arquivo csv e parquet
-my-app/data/raw/MICRODADOS_ENEM_2023.csv
-my-app/data/treated/df_enem.parquet
+/data/raw/MICRODADOS_ENEM_2023.csv
+/data/treated/df_enem.parquet
+/data/zip/microdados_enem_2023.zip
 
 

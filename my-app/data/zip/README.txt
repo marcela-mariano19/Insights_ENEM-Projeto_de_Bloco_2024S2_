@@ -1,0 +1,1 @@
+O arquivo microdados_enem_2023.zip não foi enviado para o GIT devido ao tamanho
