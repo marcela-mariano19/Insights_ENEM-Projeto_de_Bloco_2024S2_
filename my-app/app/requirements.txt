@@ -6,4 +6,4 @@ seaborn
 fastparquet
 beautifulsoup4
 cssselect
-collections
+#collections
