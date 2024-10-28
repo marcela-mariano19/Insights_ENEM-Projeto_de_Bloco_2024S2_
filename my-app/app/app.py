@@ -2,9 +2,7 @@
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
-
-import os
-os.system('pip install fastparquet')
+import plotly.express as px
 
 
 st.set_page_config(
@@ -13,20 +11,75 @@ st.set_page_config(
     layout="wide",                    
 )
 
-def dash_Uf(ufs_dict):
+def dash_uf(ufs_dict):
     df_ufs = pd.DataFrame(list(ufs_dict.items()),columns = ['UF','Total de Provas Aplicadas'])
-    df_ufs.set_index('UF', inplace=True)
+    fig = px.bar(df_ufs, x='UF', y='Total de Provas Aplicadas',text_auto=True)
+    fig.update_traces(textposition='outside')
+    return st.plotly_chart(fig)
+
+def dash_subs_uf(df_uf_region_full):
+    ufs_sorted = df_uf_region_full['UF'].sort_values().tolist()
+    fig = px.bar(df_uf_region_full, x='UF', y='Total Inscritos',category_orders={'UF':ufs_sorted}, text_auto=True)
+    fig.update_traces(textposition='outside')
+    return st.plotly_chart(fig)
+
+
+def dash_Uf_MH(df_uf_region_full,y_list,seletions=None):
+    if seletions is None:
+        ufs_sorted = df_uf_region_full['UF'].sort_values().tolist()
+        fig = px.bar(df_uf_region_full,
+                    x='UF',
+                    y=y_list,
+                    category_orders={'UF':ufs_sorted},
+                    barmode='group',
+                    )
+        return st.plotly_chart(fig)
+    else:
+        df_selected = df_uf_region_full[df_uf_region_full['UF'].isin(seletions)]
+        ufs_sorted = df_selected['UF'].sort_values().tolist()
+        fig = px.bar(df_selected,
+                    x='UF',
+                    y=y_list,
+                    category_orders={'UF':ufs_sorted},
+                    barmode='group',
+                    )
+        return st.plotly_chart(fig)
     
-    return st.bar_chart(df_ufs,)
+def dash_nacionaly(df_uf_region_full):
+    fig = px.line(df_uf_region_full, 
+                 x='UF', 
+                 y=['Inscritos Não Declarados',
+       'Inscritos Brasileiros', 'Inscritos Brasileiros Naturalizados',
+       'Inscritos Estrangeiros',
+       'Inscritos Brasileiros Natos Nascidos no Exterior'],
+            log_y=True,
+                 )
+    return st.plotly_chart(fig)
 
-def dash_Uf_MH(df_uf_region_full):
 
-    return st.bar_chart(df_uf_region_full,x='UF',y=['Total Homens Inscritos','Total Mulheres Inscritas','Total Homens Presentes','Total Mulheres Presentes'],stack=False)
+def dash_pie(df_send,info_name,info_value):
+    fig = px.pie(df_send,
+                values=info_value,
+                names=info_name,
+                width=500,  # ajusta a largura
+                height=400  # ajusta a altura)
+    )
+    fig.add_annotation(text='Considerando dados extraídos no dia 21/10/24',
+                        x=0.5,
+                        y=-0.1,
+                        showarrow=False)
+    return st.plotly_chart(fig)
 
-def dash_Uf_selected_MH(df_send,seletions):
-    df_send = df_send[df_send['UF'].isin(seletions)]
+def dash_bar_race(df_send_):
+    df_filtered = df_send_[['Total Inscritos Raça Não Declarada',
+       'Total Inscritos Raça Branca', 'Total Inscritos Raça Preta',
+       'Total Inscritos Raça Parda', 'Total Inscritos Raça Amarela',
+       'Total Inscritos Raça Indígena']].sum()
+    fig = px.bar(df_filtered, x=df_filtered.index,
+                y=df_filtered.values,
+                text_auto=True)
+    return st.plotly_chart(fig)
 
-    return st.bar_chart(df_send,x='UF',y=['Total Homens Inscritos','Total Mulheres Inscritas','Total Homens Presentes','Total Mulheres Presentes'],stack=False)
 
 @st.cache_data
 def load_data():
@@ -37,7 +90,7 @@ def load_data():
 
 
 def main ():
-    menu = ['Home','Dados Gerais 2023', ' Visão Inscritos','Visão Concluintes','Visão Desempenho','Fatores de Contexto','Personalizado', 'Criadora','TP1']
+    menu = ['Home','Dados Gerais 2023', ' Visão Inscritos','Visão Desempenho','Fatores de Contexto','Personalizado', 'Criadora','TP1']
 
     st.title("Insights ENEM")
     choice = st.sidebar.selectbox('Menu', menu)
@@ -54,7 +107,7 @@ def main ():
         st.subheader("Esta aplicação tem ligação com qual Objetivos de Desenvolvimento Sustentável?")
         st.markdown("Este projeto está ligado ao ODS 4 - Educação de Qualidade, pois visa facilitar o acesso a informações sobre o ENEM, que é uma das principais formas de acesso ao ensino superior no Brasil. Esses dados ajudam a entender melhor o cenário educacional do país e a identificar possíveis melhorias. Quer saber mais sobre as metas do ODS 4? [Clique aqui](https://brasil.un.org/pt-br/sdgs/4)")
     
-        st.subheader("De onde vêm os dados?")
+        st.subheader("De onde vEm os dados?")
         st.markdown("Os dados utilizados nesta aplicação são públicos e foram disponibilizados pelo [INEP](https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enem). Legal, né? O governo brasileiro oferece esses e outros dados devido a lei de Dados Abertos. ")
         
     elif choice == 'Dados Gerais 2023':
@@ -69,44 +122,120 @@ def main ():
 
         col4, col5, col6 = st.columns(3)
         with st.container():
-            col4.metric(label="Total de Treineiros Presentes", value=df['Total de treineiros inscritos'].apply(lambda x: f"{x:,.0f}".replace(',', '.')).iloc[0])
-            col5.metric(label="Total de Mulheres Presentes", value=df['Total de Mulheres inscritas'].apply(lambda x: f"{x:,.0f}".replace(',', '.')).iloc[0])
-            col6.metric(label="Total de Homens Presentes", value=df['Total de Homens inscritos'].apply(lambda x: f"{x:,.0f}".replace(',', '.')).iloc[0])
+            col4.metric(label="Total de Treineiros Inscritos", value=df['Total de treineiros inscritos'].apply(lambda x: f"{x:,.0f}".replace(',', '.')).iloc[0])
+            col5.metric(label="Total de Mulheres Presentes", value=f"{df_uf_region_full['Total Mulheres Presentes'].sum():,.0f}".replace(',', '.'))
+            col6.metric(label="Total de Homens Presentes", value=f"{df_uf_region_full['Total Homens Presentes'].sum():,.0f}".replace(',', '.'))
+
+        col7,col8 = st.columns([1,2])
+
+        with col7:
+            st.subheader('Total de Inscritos por Região')
+            dash_pie(df_uf_region_full,'Regiao','Total Inscritos')
+
+        with col8:
+            st.subheader('Inscritos por UF')
+            dash_subs_uf(df_uf_region_full)
 
         st.subheader('Provas Aplicadas por UF')
         
         #Total de Provas Aplicadas por UF
-        dash_Uf(df['Total de Provas Aplicadas por UF'][0])
+        dash_uf(df['Total de Provas Aplicadas por UF'][0])
 
-        #Total de Mulheres e Homens iscritos vs Presentes por UF
-        st.subheader('Total de Mulheres e Homens Inscritos vs Presentes por UF')
-        dash_Uf_MH(df_uf_region_full)
 
-        if 'ufs_selected' not in st.session_state:
-            st.session_state['ufs_selected'] = []
+        st.subheader('Total de Inscrições vs Presença - Homens')
+        dash_Uf_MH(df_uf_region_full,['Total Homens Inscritos','Total Homens Presentes'])
+
+        if 'ufs_selected_men' not in st.session_state:
+            st.session_state.ufs_selected_men = []
 
         st.write("Quer exibir somente alguns UF's? Selecione abaixo:")
-        ufs_selected = st.multiselect('UFs', df_uf_region_full['UF'].sort_values(), default=st.session_state['ufs_selected'])
+        ufs_selected_men = st.multiselect('UFs', df_uf_region_full['UF'].sort_values(), key='ufs_selected_men')
 
-        st.session_state['ufs_selected'] = ufs_selected
+        if ufs_selected_men:
+            dash_Uf_MH(df_uf_region_full=df_uf_region_full, seletions=ufs_selected_men,y_list=['Total Homens Inscritos','Total Homens Presentes'])
+        
+        if ufs_selected_men != st.session_state['ufs_selected_men']:
+            st.session_state.ufs_selected_men = ufs_selected_men
 
-        if ufs_selected:
-            dash_Uf_selected_MH(df_uf_region_full,ufs_selected)
+###############################################################################################################################################################
 
+        st.subheader('Total de Inscrições vs Presença - Mulheres')
+        dash_Uf_MH(df_uf_region_full,['Total Mulheres Inscritas','Total Mulheres Presentes'])
+
+        def woman_selected():
+            st.write(st.session_state.ufs_selected_woman)
+
+        if 'ufs_selected_woman' not in st.session_state:
+            st.session_state.ufs_selected_woman = []
+
+        st.write("Quer exibir somente alguns UF's? Selecione abaixo:")
+        ufs_selected_woman = st.multiselect('UFs', df_uf_region_full['UF'].sort_values(), key='ufs_selected_woman')
+
+        if ufs_selected_woman != st.session_state['ufs_selected_woman']:
+            st.session_state.ufs_selected_woman = ufs_selected_woman
+
+        if ufs_selected_woman:
+            dash_Uf_MH(df_uf_region_full=df_uf_region_full, seletions=ufs_selected_woman,y_list=['Total Mulheres Inscritas','Total Mulheres Presentes'])
+        
 
         st.subheader('Dados Gerais para Download:')
 
         st.dataframe(df_uf_region_full)
         
-
-
         
         
     elif choice == ' Visão Inscritos':
-        st.write('EM DESENVOLVIMENTO')
 
-    elif choice == 'Visão Concluintes':
-        st.write('EM DESENVOLVIMENTO')
+        st.subheader('Inscritos por Nacionalidade')
+        dash_nacionaly(df_uf_region_full)
+
+        st.subheader('Inscritos por Cor/Raça')
+        dash_bar_race(df_uf_region_full)
+
+
+        with st.container():
+            col9,col10,col11 = st.columns(3)
+            with col9:
+                st.subheader('Inscritos por Região e Cor/Raça Não Declarada')
+                dash_pie(df_uf_region_full,'Regiao','Total Inscritos Raça Não Declarada')
+
+            with col10:
+                st.subheader('Inscritos por Região e Cor/Raça Branca')
+                dash_pie(df_uf_region_full,'Regiao','Total Inscritos Raça Branca')
+
+            with col11:
+                st.subheader('Inscritos por Região e Cor/Raça Parda')
+                dash_pie(df_uf_region_full,'Regiao','Total Inscritos Raça Parda')
+        
+        with st.container():
+            col12,col13,col14 = st.columns(3)
+            with col12:
+                st.subheader('Inscritos por Região e Cor/Raça Amarela')
+                dash_pie(df_uf_region_full,'Regiao','Total Inscritos Raça Amarela')
+
+            with col13:
+                st.subheader('Inscritos por Região e Cor/Raça Preta')
+                dash_pie(df_uf_region_full,'Regiao','Total Inscritos Raça Preta')
+
+            with col14:
+                st.subheader('Inscritos por Região e Cor/Raça Indígena')
+                dash_pie(df_uf_region_full,'Regiao','Total Inscritos Raça Indígena')
+
+
+        st.subheader('Inscritos por Faixa Etária')
+        df_group_age = df_uf_region_full[['UF','Inscritos menores de 17 anos',
+       'Inscritos com 17 anos', 'Inscritos com 18 anos',
+       'Inscritos com 19 anos', 'Inscritos com 20 anos',
+       'Inscritos com 21 anos', 'Inscritos com 22 anos',
+       'Inscritos com 23 anos', 'Inscritos com 24 anos',
+       'Inscritos com 25 anos', 'Inscritos entre 26 e 30 anos',
+       'Inscritos entre 31 e 35 anos', 'Inscritos entre 36 e 40 anos',
+       'Inscritos entre 41 e 45 anos', 'Inscritos entre 46 e 50 anos',
+       'Inscritos entre 51 e 55 anos', 'Inscritos entre 56 e 60 anos',
+       'Inscritos entre 61 e 65 anos', 'Inscritos entre 66 e 70 anos',
+       'Inscritos maiores de 70 anos']].sort_values(by='UF')
+        
+        st.dataframe(df_group_age)
     
     elif choice == 'Visão Desempenho':
         st.write('EM DESENVOLVIMENTO')
@@ -119,7 +248,7 @@ def main ():
     
     elif choice == 'Criadora':
         st.subheader('Marcela Mariano')
-        st.write('Aluna do curso de Ciência de Dados do Instituto INFNET')
+        st.write('Atualmente, sou aluna do curso de Ciência de Dados do Instituto INFNET e estou no 4º período. Além disso, sou gestora de N2 na empresa [SPOT Metrics](https://spotmetrics.com/)')
         st.write('Linkedin: [Marcela Mariano](https://www.linkedin.com/in/marcela-mariano-8a0b6a1b4/)')
 
 
