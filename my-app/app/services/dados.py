@@ -1,9 +1,9 @@
-from fastapi import FastAPI, Query,Path
+from fastapi import FastAPI,Path,HTTPException
 import pandas as pd
 
-app = FastAPI()
+router_data = FastAPI()
 
-@app.get(
+@router_data.get(
     "/dados/",
     description="Retorna os dados da análise dos microdados do ENEM 2023. Ela pode ser usada para por pessoas que construir as próprias visualizações.",
     responses={

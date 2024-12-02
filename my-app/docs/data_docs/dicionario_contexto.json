@@ -1,0 +1,178 @@
+{
+    "TP_SEXO": {
+        "descricao": "Sexo do candidato",
+        "respostas": {
+            "M": "Masculino",
+            "F": "Feminino"
+        }
+    },
+    "TP_FAIXA_ETARIA": {
+        "descricao": "Faixa etária do candidato",
+        "respostas": {
+            "1": "Menor de 17 anos",
+            "2": "17 anos",
+            "3": "18 anos",
+            "4": "19 anos",
+            "5": "20 anos",
+            "6": "21 anos",
+            "7": "22 anos",
+            "8": "23 anos",
+            "9": "24 anos",
+            "10": "25 anos",
+            "11": "Entre 26 e 30 anos",
+            "12": "Entre 31 e 35 anos",
+            "13": "Entre 36 e 40 anos",
+            "14": "Entre 41 e 45 anos",
+            "15": "Entre 46 e 50 anos",
+            "16": "Entre 51 e 55 anos",
+            "17": "Entre 56 e 60 anos",
+            "18": "Entre 61 e 65 anos",
+            "19": "Entre 66 e 70 anos",
+            "20": "Maior de 70 anos"
+        }
+    },
+    "TP_ESCOLA": {
+        "descricao": "Tipo de escola frequentada",
+        "respostas": {
+            "1": "Não Respondeu",
+            "2": "Pública",
+            "3": "Privada"
+        }
+    },
+    "TP_ESTADO_CIVIL": {
+        "descricao": "Estado civil do candidato",
+        "respostas": {
+            "0": "Não informado",
+            "1": "Solteiro(a)",
+            "2": "Casado(a)/Mora com companheiro(a)",
+            "3": "Divorciado(a)/Desquitado(a)/Separado(a)",
+            "4": "Viúvo(a)"
+        }
+    },
+    "TP_COR_RACA": {
+        "descricao": "Cor e raça do candidato",
+        "respostas": {
+            "0": "Não declarado",
+            "1": "Branca",
+            "2": "Preta",
+            "3": "Parda",
+            "4": "Amarela",
+            "5": "Indígena"
+        }
+    },
+    "TP_NACIONALIDADE": {
+        "descricao": "Nacionalidade do candidato",
+        "respostas": {
+            "0": "Não informado",
+            "1": "Brasileiro(a)",
+            "2": "Brasileiro(a) Naturalizado(a)",
+            "3": "Estrangeiro(a)",
+            "4": "Brasileiro(a) Nato(a), nascido(a) no exterior"
+        }
+    },
+    "TP_ANO_CONCLUIU": {
+        "descricao": "Ano em que o candidato concluiu o ensino médio",
+        "respostas": {
+            "0": "Não informado",
+            "1": "2022",
+            "2": "2021",
+            "3": "2020",
+            "4": "2019",
+            "5": "2018",
+            "6": "2017",
+            "7": "2016",
+            "8": "2015",
+            "9": "2014",
+            "10": "2013",
+            "11": "2012",
+            "12": "2011",
+            "13": "2010",
+            "14": "2009",
+            "15": "2008",
+            "16": "2007",
+            "17": "Antes de 2007"
+        }
+    },
+    "TP_ENSINO": {
+        "descricao": "Tipo de instituição que concluiu ou concluirá o Ensino Médio",
+        "respostas": {
+            "1": "Ensino Regular",
+            "2": "Educação Especial - Modalidade Substitutiva"
+        }
+    },
+    "IN_TREINEIRO": {
+        "descricao": "Indica se o inscrito fez a prova com intuito de apenas treinar seus conhecimentos",
+        "respostas": {
+            "0": "Não",
+            "1": "Sim"
+        }
+    },
+    "NO_MUNICIPIO_ESC": {
+        "descricao": "Município da escola do candidato",
+        "respostas": {}
+    },
+    "SG_UF_ESC": {
+        "descricao": "Estado da escola do candidato",
+        "respostas": {}
+    },
+    "TP_DEPENDENCIA_ADM_ESC": {
+        "descricao": "Quem administra a escola do candidato",
+        "respostas": {
+            "1": "Federal",
+            "2": "Estadual",
+            "3": "Municipal",
+            "4": "Privada"
+        }
+    },
+    "TP_LOCALIZACAO_ESC": {
+        "descricao": "localização da escola do candidato",
+        "respostas": {
+            "1": "urbana",
+            "2": "rural"
+        }
+    },
+    "NO_MUNICIPIO_PROVA": {
+        "descricao": "Município da prova",
+        "respostas": {}
+    },
+    "SG_UF_PROVA": {
+        "descricao": "Estado da prova",
+        "respostas": {}
+    },
+    "NU_NOTA_CN": {
+        "descricao": "Nota da prova de Ciências da Natureza",
+        "respostas": {}
+    },
+    "NU_NOTA_CH": {
+        "descricao": "Nota da prova de Ciências Humanas",
+        "respostas": {}
+    },
+    "NU_NOTA_LC": {
+        "descricao": "Nota da prova de Linguagens e Códigos",
+        "respostas": {}
+    },
+    "NU_NOTA_MT": {
+        "descricao": "Nota da prova de Matemática",
+        "respostas": {}
+    },
+    "TP_LINGUA": {
+        "descricao": "língua estrangeira escolhida para a prova",
+        "respostas": {
+            "0": "Inglês",
+            "1": "Espanhol"
+        }
+    },
+    "TP_STATUS_REDACAO": {
+        "descricao": "Situação da redação do candidato",
+        "respostas": {
+            "1": "Sem problemas",
+            "2": "Anulada",
+            "3": "Cópia Texto Motivador",
+            "4": "Em Branco",
+            "6": "Fuga ao tema",
+            "7": "Não atendimento ao tipo textual",
+            "8": "Texto insuficiente",
+            "9": "Parte desconectada"
+        }
+    }
+}

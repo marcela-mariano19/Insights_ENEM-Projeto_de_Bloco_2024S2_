@@ -3,6 +3,20 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 import plotly.express as px
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+from app.services.chat import router as chat_router
+from fastapi import FastAPI
+import requests
+
+
+app = FastAPI()
+
+
+app.include_router(chat_router)
 
 
 st.set_page_config(
@@ -90,7 +104,7 @@ def load_data():
 
 
 def main ():
-    menu = ['Home','Dados Gerais 2023', ' Visão Inscritos','Visão Desempenho','Fatores de Contexto','Personalizado', 'Criadora','TP1']
+    menu = ['Home','Dados Gerais 2023', ' Visão Inscritos','Visão Desempenho','Fatores de Contexto','Insights IA', 'Criadora','TP1']
 
     st.title("Insights ENEM")
     choice = st.sidebar.selectbox('Menu', menu)
@@ -243,8 +257,32 @@ def main ():
     elif choice == 'Fatores de Contexto':
         st.write('EM DESENVOLVIMENTO')
 
-    elif choice == 'Personalizado':
-        st.write('EM DESENVOLVIMENTO')
+    elif choice == 'Insights IA':
+        st.markdown('**Oi, eu sou a especialista do ENEM Insights. Informe o estado para que gerar um texto com o que está "escondido" nos dados do ENEM 2023.**')
+        if 'messages' not in st.session_state:
+            st.session_state.messages = []
+        
+        for message in st.session_state.messages:
+            with st.chat_message(message['role']):
+                st.markdown(message['content'])
+
+        if chat_uf := st.chat_input("Digite a UF que deseja gerar um texto sobre o desempenho no ENEM 2023:", key='chat_uf'):
+            st.session_state.messages.append({"role": "user", "content":chat_uf }) #Adicionando a mensagem do usuário ao histórico de mensagens
+            with st.chat_message("user"):
+                st.markdown(chat_uf)
+            
+            with st.chat_message("assistant"):
+                with st.spinner("Gerando texto..."):
+                    req = requests.post("http://localhost:8000/chat", #Não achei forma de subir do df ou deixat ele pré-carregado
+                                        json={"text": chat_uf})
+                    response = req.json()
+                    st.markdown(response['message'])
+            st.session_state.messages.append({"role": "assistant", "content":response['message']}) #Adicionando a mensagem do assistente ao histórico de mensagens
+                
+        
+        
+        
+
     
     elif choice == 'Criadora':
         st.subheader('Marcela Mariano')

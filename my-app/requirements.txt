@@ -10,3 +10,12 @@ plotly==5.24.1
 fastapi
 uvicorn
 httpie
+torch
+transformers
+langchain_community
+langchain==0.3.7
+langchain-huggingface
+huggingface_hub
+sentencepiece
+langchain_google_genai
+python-dotenv
