@@ -1,0 +1,26 @@
+name: Deploy Workflow
+
+# Quando o workflow será acionado (por exemplo, ao fazer push na branch main)
+on:
+  push:
+    branches:
+      - main
+
+# Configuração dos jobs (tarefas)
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Sistema operacional usado pela máquina virtual (não importa que você usa Windows)
+
+    steps:
+      # Passo 1: Fazer checkout do código
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      # Passo 2: Usar a Secret como variável de ambiente
+      - name: Usar Google API Key
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          echo "Google API Key configurada como variável de ambiente."
+          # Exemplo de uso: você pode chamar um script ou programa que dependa dessa variável
+          echo "Valor da chave foi carregado: $GOOGLE_API_KEY"
