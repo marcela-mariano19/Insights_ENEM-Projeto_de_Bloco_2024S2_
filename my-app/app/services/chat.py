@@ -64,6 +64,7 @@ def gerar_texto_uf(uf, df):
     contexto += f" - Total de mulheres presentes {df_uf['Total Mulheres Presentes']}\n"
     contexto += f" - Total de homens inscritos {df_uf['Total Homens Inscritos']}\n"
     contexto += f" - Total de homens presentes {df_uf['Total Homens Presentes']}\n"
+    
 
     #Criando template para chat. Usei como base uma explicação que o professor Fernando deu em aula.
     template = ChatPromptTemplate([

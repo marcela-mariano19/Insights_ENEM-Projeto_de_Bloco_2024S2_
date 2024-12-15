@@ -121,7 +121,7 @@ def main ():
         st.subheader("Esta aplicação tem ligação com qual Objetivos de Desenvolvimento Sustentável?")
         st.markdown("Este projeto está ligado ao ODS 4 - Educação de Qualidade, pois visa facilitar o acesso a informações sobre o ENEM, que é uma das principais formas de acesso ao ensino superior no Brasil. Esses dados ajudam a entender melhor o cenário educacional do país e a identificar possíveis melhorias. Quer saber mais sobre as metas do ODS 4? [Clique aqui](https://brasil.un.org/pt-br/sdgs/4)")
     
-        st.subheader("De onde vEm os dados?")
+        st.subheader("De onde vêm os dados?")
         st.markdown("Os dados utilizados nesta aplicação são públicos e foram disponibilizados pelo [INEP](https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enem). Legal, né? O governo brasileiro oferece esses e outros dados devido a lei de Dados Abertos. ")
         
     elif choice == 'Dados Gerais 2023':
@@ -279,10 +279,6 @@ def main ():
                     st.markdown(response['message'])
             st.session_state.messages.append({"role": "assistant", "content":response['message']}) #Adicionando a mensagem do assistente ao histórico de mensagens
                 
-        
-        
-        
-
     
     elif choice == 'Criadora':
         st.subheader('Marcela Mariano')
